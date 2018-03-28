@@ -1,0 +1,36 @@
+﻿using System.Collections.Generic;
+
+namespace DataProcessing.Data.Simple
+{
+    /// <summary>
+    /// Simple data source, that is used for numeric, categorial and mixed data
+    /// </summary>
+    public class SimpleDataSource : DataSource
+    {
+        /// <summary>
+        /// Separator symbol, that is used in the <see cref="Parse(string[], char?)"/> method
+        /// </summary>
+        protected static char Separator = '\t';
+
+        public SimpleDataSource(string[] source, DataType[] typeMask, DataFlow[] flowMask, char? separator = null)
+            : base(Parse(source, separator), typeMask, flowMask, new SimpleDataTokenFactory(), separator)
+        {
+        }
+
+        private static ICollection<string[]> Parse(string[] source, char? separator)
+        {
+            if (separator != null)
+            {
+                Separator = separator.Value;
+            }
+
+            List<string[]> result = new List<string[]>(source.Length);
+            foreach (string line in source)
+            {
+                result.Add(line.Split(Separator));
+            }
+
+            return result;
+        }
+    }
+}
