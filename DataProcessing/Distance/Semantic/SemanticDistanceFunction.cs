@@ -38,7 +38,7 @@ namespace DataProcessing.Distance.Semantic
                 distance += Calculate(differences);
             }
 
-            return distance;
+            return distance /= vector1.Length - 1;
         }
 
         private double Calculate(SemanticPair[,] differences)
@@ -49,7 +49,7 @@ namespace DataProcessing.Distance.Semantic
                 distance += Math.Abs(differences[i, 0].Frequence - differences[i, 1].Frequence);
             }
 
-            return distance;
+            return distance /= differences.GetLength(0);
         }
     }
 }
