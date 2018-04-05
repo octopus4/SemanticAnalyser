@@ -3,22 +3,25 @@ using System.Linq;
 using DataProcessing.Data;
 using SOM;
 
-namespace SomVisualisation.Drawers.Categorial
+namespace Visualisation.Drawers.Categorial
 {
     public class CategorialMapDrawer : MapDrawer<string>
     {
+        private IEnumerable<string> Values { get; }
+
         public CategorialMapDrawer(Dictionary<Neuron, List<DataToken>> clusterResult,
-            int index, int cellWidth, int cellHeight, CanvasCreator canvasCreator)
+            int index, int cellWidth, int cellHeight, CanvasCreator canvasCreator, IEnumerable<string> values)
             : base(clusterResult, index, cellWidth, cellHeight, canvasCreator)
         {
+            Values = values;
         }
 
-        internal override Canvas Draw(IEnumerable<string> data, int width, int height)
+        internal override Canvas Draw(int clusterWidth, int clusterHeight)
         {
-            Canvas result = CanvasCreator.CreateCanvas(width, height);
+            Canvas result = CanvasCreator.CreateCanvas(clusterWidth, clusterHeight);
             PaintTool mapGraphics = result.Tool;
 
-            Dictionary<string, ColorAdapter> palette = DetectColors(data);
+            Dictionary<string, ColorAdapter> palette = DetectColors(Values);
 
             foreach (var pair in ClusterResult)
             {

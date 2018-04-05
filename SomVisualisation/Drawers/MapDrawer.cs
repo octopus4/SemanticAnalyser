@@ -3,7 +3,7 @@ using System.Linq;
 using DataProcessing.Data;
 using SOM;
 
-namespace SomVisualisation.Drawers
+namespace Visualisation.Drawers
 {
     public abstract class MapDrawer<T>
     {
@@ -25,7 +25,7 @@ namespace SomVisualisation.Drawers
             CellHeight = cellHeight;
         }
 
-        internal abstract Canvas Draw(IEnumerable<T> data, int width, int height);
+        internal abstract Canvas Draw(int clusterWidth, int clusterHeight);
 
         protected Dictionary<T, ColorAdapter> DetectColors(IEnumerable<T> data)
         {
