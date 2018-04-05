@@ -1,4 +1,4 @@
-﻿namespace SomVisualisation.WPF
+﻿namespace Visualisation.WPF
 {
     public class WPFCanvasCreator : CanvasCreator
     {

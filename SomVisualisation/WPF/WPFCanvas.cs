@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace SomVisualisation.WPF
+namespace Visualisation.WPF
 {
     public class WPFCanvas : Canvas
     {

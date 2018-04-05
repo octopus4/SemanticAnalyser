@@ -1,4 +1,4 @@
-﻿namespace SomVisualisation
+﻿namespace Visualisation
 {
     public abstract class CanvasCreator
     {

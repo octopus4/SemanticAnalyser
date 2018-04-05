@@ -7,8 +7,8 @@
     <ProjectGuid>{056A61CE-F6FF-43EF-AD27-EFF65FE5099F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SomVisualisation</RootNamespace>
-    <AssemblyName>SomVisualisation</AssemblyName>
+    <RootNamespace>Visualisation</RootNamespace>
+    <AssemblyName>Visualisation</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ColorAdapter.cs" />
+    <Compile Include="Graph\Node.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Canvas.cs" />
     <Compile Include="CanvasCreator.cs" />
@@ -52,7 +53,9 @@
     <Compile Include="Drawers\Numerical\NumericalMapDrawer.cs" />
     <Compile Include="Drawers\Semantic\SemanticMapDrawer.cs" />
     <Compile Include="PaintTool.cs" />
-    <Compile Include="VisualMap.cs" />
+    <Compile Include="VisualData.cs" />
+    <Compile Include="Graph\VisualGraph.cs" />
+    <Compile Include="SOM\VisualMap.cs" />
     <Compile Include="WPF\WPFCanvas.cs" />
     <Compile Include="WPF\WPFCanvasCreator.cs" />
     <Compile Include="WPF\WPFPaintTool.cs" />
