@@ -20,11 +20,11 @@ namespace DataProcessing.Data.Semantic
         /// <summary>
         /// Word separators, which are needed to split the text to the array of separte words
         /// </summary>
-        private static readonly char[] WordSeparators = new char[] { ' ', '.', ',', '?', '!' };
+        private static readonly char[] WordSeparators = new char[] { ' ', '.', ',', '?', '!', '"', '-', ';' };
         /// <summary>
         /// Semantic matrix that contains left and right context of an each word in the text
         /// </summary>
-        private static SemanticMatrix Matrix { get; set; }
+        public static SemanticMatrix Matrix { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of <see cref="SemanticDataSource"/>

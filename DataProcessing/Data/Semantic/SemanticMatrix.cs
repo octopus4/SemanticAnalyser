@@ -10,7 +10,7 @@ namespace DataProcessing.Data.Semantic
     /// Matrix of semantic data, is used to store number of occurences of pair (l, r)
     /// in the base text
     /// </summary>
-    internal class SemanticMatrix : ICollection<string[]>
+    public class SemanticMatrix : ICollection<string[]>
     {
         /// <summary>
         /// Matrix of fuzzy weights
@@ -23,7 +23,7 @@ namespace DataProcessing.Data.Semantic
         /// <summary>
         /// Dictionary
         /// </summary>
-        private string[] Words { get; set; }
+        public string[] Words { get; private set; }
         /// <summary>
         /// Maximal distance between words
         /// </summary>
@@ -37,6 +37,11 @@ namespace DataProcessing.Data.Semantic
         public string this[int index]
         {
             get { return Words[index]; }
+        }
+
+        public double this[int row, int column]
+        {
+            get { return Matrices[1][row, column]; }
         }
         /// <summary>
         /// Length of data source
@@ -105,7 +110,7 @@ namespace DataProcessing.Data.Semantic
         }
 
         /// <summary>
-        /// Returns a vector from the semantic matrix
+        /// Returns a fuzzy vector from the semantic matrix
         /// </summary>
         /// <param name="rowIndex">Index of the row, should be null if <paramref name="colIndex"/> is not null</param>
         /// <param name="colIndex">Index of the column, should be null if <paramref name="rowIndex"/> is not null</param>
@@ -121,10 +126,10 @@ namespace DataProcessing.Data.Semantic
             {
                 throw new ArgumentException("Arguments can't be both null or non-null");
             }
-            
-            List<double> vector = new List<double>();
-            int size = Matrix.GetLength(0);
+
             int index = 0;
+            int size = Matrix.GetLength(0);
+            List<double> vector = new List<double>(size);
 
             Func<int> firstIndex;
             Func<int> secondIndex;
@@ -144,7 +149,7 @@ namespace DataProcessing.Data.Semantic
                 vector.Add(Matrices[key][firstIndex(), secondIndex()]);
             }
 
-            return vector.ToArray();
+            return Fuzzyficate(vector.ToArray());
         }
 
         public void Add(string[] item)
@@ -182,9 +187,9 @@ namespace DataProcessing.Data.Semantic
                 };
                 for (int j = 1; j <= MaxDistance; j++)
                 {
-                    fuzzyContext.AddRange(Fuzzyficate(GetVector(j, rowIndex: i)).Select(item => item.ToString("0.000")));
+                    fuzzyContext.AddRange(GetVector(j, rowIndex: i).Select(item => item.ToString("0.000")));
                     fuzzyContext.Add("|");
-                    fuzzyContext.AddRange(Fuzzyficate(GetVector(j, colIndex: i)).Select(item => item.ToString("0.000")));
+                    fuzzyContext.AddRange(GetVector(j, colIndex: i).Select(item => item.ToString("0.000")));
                     fuzzyContext.Add(";");
                 }
 
