@@ -30,6 +30,11 @@ namespace SOM.Semantics
             }
         }
 
+        public SemanticPair[] GetSemanticPairs()
+        {
+            return (SemanticPair[])Weights[0];
+        }
+
         public override void CorrectWeights(DataToken token, double diminishingFactor)
         {
             for (int index = StartIndex; index < token.Length; index++)
