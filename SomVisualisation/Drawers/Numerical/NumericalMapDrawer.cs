@@ -4,27 +4,29 @@ using System.Linq;
 using DataProcessing.Data;
 using SOM;
 
-namespace SomVisualisation.Drawers.Numerical
+namespace Visualisation.Drawers.Numerical
 {
     public class NumericalMapDrawer : MapDrawer<double>
     {
+        private IEnumerable<double> Values { get; }
+
         public NumericalMapDrawer(Dictionary<Neuron, List<DataToken>> clusterResult,
-            int index, int cellWidth, int cellHeight, CanvasCreator canvasCreator)
+            int index, int cellWidth, int cellHeight, CanvasCreator canvasCreator, IEnumerable<double> values)
             : base(clusterResult, index, cellWidth, cellHeight, canvasCreator)
         {
+            Values = values;
         }
 
-        internal override Canvas Draw(IEnumerable<double> data, int width, int height)
+        internal override Canvas Draw(int clusterWidth, int clusterHeight)
         {
-            Canvas result = CanvasCreator.CreateCanvas(width, height);
+            Canvas result = CanvasCreator.CreateCanvas(clusterWidth, clusterHeight);
             PaintTool mapGraphics = result.Tool;
 
-            double min = data.Min();
-            double max = data.Max();
+            double min = Values.Min();
+            double max = Values.Max();
             double step = (max - min) / 512;
 
             IEnumerable<double> intervalValues = SetIntervals(min, max, step);
-
             Dictionary<double, ColorAdapter> palette = DetectColors(intervalValues);
 
             foreach (var pair in ClusterResult)
@@ -40,7 +42,7 @@ namespace SomVisualisation.Drawers.Numerical
                 int x = (int)(pair.Key.Position.X * CellWidth);
                 int y = (int)(pair.Key.Position.Y * CellHeight);
 
-                mapGraphics.DrawCluster(x, y, width, height, color);
+                mapGraphics.DrawCluster(x, y, clusterWidth, clusterHeight, color);
             }
 
             return result;
