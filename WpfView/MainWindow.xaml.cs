@@ -14,8 +14,12 @@ using DataProcessing.Distance;
 using DataProcessing.Distance.Semantic;
 using SOM;
 using SOM.Semantics;
-using SomVisualisation;
-using SomVisualisation.WPF;
+using Visualisation;
+using Visualisation.WPF;
+using Visualisation.Graph;
+using System.Windows.Media.Imaging;
+using System.Windows.Media;
+using System.Windows.Input;
 
 namespace WpfView
 {
@@ -110,6 +114,8 @@ namespace WpfView
         /// Data about errors
         /// </summary>
         private ObservableCollection<KeyValuePair<int, double>> Data { get; set; }
+
+        private VisualGraph Graph { get; set; }
 
         public MainWindow()
         {
@@ -228,9 +234,13 @@ namespace WpfView
             }
 
             CanvasCreator creator = new WPFCanvasCreator();
-            VisualMap visualMap = new VisualMap(MapImageSize, MapImageSize, Source, creator);
+            VisualMap visualMap = new VisualMap(MapImageSize, MapImageSize, Source, creator, Headers);
 
-            visualMap.Init(Map.Result.NeuronsToTokensMap, Headers);
+            visualMap.Init(Map.Result.NeuronsToTokensMap);
+
+            CreateGraph();
+            DrawGraph();
+
             Window clusterResultForm = new ClusterResultWindow(visualMap, Source.FlowTypes);
             clusterResultForm.ShowDialog();
         }
@@ -241,6 +251,48 @@ namespace WpfView
             {
                 Trainer.Stop();
             }
+        }
+
+        private void PictureBoxGraphMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                pictureBoxGraph.Width *= 1.25;
+                pictureBoxGraph.Height *= 1.25;
+            }
+            else
+            {
+                pictureBoxGraph.Width /= 1.25;
+                pictureBoxGraph.Height /= 1.25;
+            }
+            CreateGraph();
+            DrawGraph();
+        }
+
+        private void PictureBoxGraphMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Point point = e.GetPosition(pictureBoxGraph);
+            Graph.MouseClick((int)(Math.Round(point.X)), (int)(Math.Round(point.Y)));
+            DrawGraph();
+        }
+
+        private void CreateGraph()
+        {
+            CanvasCreator creator = new WPFCanvasCreator();
+
+#warning optimize memory
+            Graph = new VisualGraph((int)pictureBoxGraph.Width, (int)pictureBoxGraph.Height, Source, creator);
+            Graph.Init(Map.Result.NeuronsToTokensMap);
+        }
+
+        private void DrawGraph()
+        {
+            WPFCanvas canvas = (WPFCanvas)Graph.Image;
+            RenderTargetBitmap bmp = new RenderTargetBitmap((int)pictureBoxGraph.Width, (int)pictureBoxGraph.Height, 96, 96, PixelFormats.Default);
+
+            bmp.Render(canvas.Visual);
+            pictureBoxGraph.Source = bmp;
+            pictureBoxGraph.InvalidateVisual();
         }
     }
 }

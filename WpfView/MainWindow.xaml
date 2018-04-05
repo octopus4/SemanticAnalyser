@@ -6,9 +6,9 @@
         xmlns:charting="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:local="clr-namespace:WpfView"
         mc:Ignorable="d"
-        Title="Семантический анализ текстов" Height="519.5" Width="802" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Background="White">
-    <Grid RenderTransformOrigin="0.501,0.493">
-        <TabControl HorizontalAlignment="Left" Height="452" Margin="10,10,0,0" VerticalAlignment="Top" Width="754">
+        Title="Семантический анализ текстов" MinHeight="520" MinWidth="800" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Background="White" Width="777">
+    <Grid RenderTransformOrigin="0.501,0.493" Height="504" VerticalAlignment="Top">
+        <TabControl Margin="10,10,0,0" Height="484" VerticalAlignment="Top" HorizontalAlignment="Left" Width="772">
             <TabItem Header="Работа с текстом">
                 <TabItem.Background>
                     <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
@@ -16,13 +16,13 @@
                         <GradientStop Color="#FFF9F9F9" Offset="1"/>
                     </LinearGradientBrush>
                 </TabItem.Background>
-                <Grid Background="#FFF9F9F9">
-                    <TextBox x:Name="textBoxSource" Height="375" Margin="10,10,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" HorizontalAlignment="Left" Width="728"/>
-                    <Button x:Name="buttonImport" Content="Импортировать текст" HorizontalAlignment="Left" Margin="10,390,0,0" VerticalAlignment="Top" Width="131" RenderTransformOrigin="0.533,1" Click="ButtonClick" Height="24"/>
-                    <TextBox x:Name="textBoxContextWidth" HorizontalAlignment="Left" Height="22" Margin="286,390,0,0" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="22"/>
-                    <TextBox x:Name="textBoxContextDepth" HorizontalAlignment="Left" Height="22" Margin="432,390,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="22"/>
-                    <Label Content="Ширина контекста (%):" HorizontalAlignment="Left" Margin="146,386,0,0" VerticalAlignment="Top" Height="38"/>
-                    <Label Content="Глубина контекста:" HorizontalAlignment="Left" Margin="313,386,0,0" VerticalAlignment="Top"/>
+                <Grid Background="#FFF9F9F9" HorizontalAlignment="Left" Width="765" Margin="0,1,0,0" Height="455" VerticalAlignment="Top">
+                    <TextBox x:Name="textBoxSource" Margin="10,10,0,0" TextWrapping="Wrap" Text="" HorizontalAlignment="Left" Width="745" Height="404" VerticalAlignment="Top"/>
+                    <Button x:Name="buttonImport" Content="Импортировать текст" HorizontalAlignment="Left" Margin="10,419,0,0" Width="131" RenderTransformOrigin="0.533,1" Click="ButtonClick" Height="24" VerticalAlignment="Top"/>
+                    <TextBox x:Name="textBoxContextWidth" HorizontalAlignment="Left" Height="22" Margin="281,422,0,0" TextWrapping="Wrap" Text="50" VerticalAlignment="Top" Width="22" RenderTransformOrigin="0.409,2.318"/>
+                    <TextBox x:Name="textBoxContextDepth" HorizontalAlignment="Left" Height="22" Margin="427,422,0,0" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" Width="22"/>
+                    <Label Content="Ширина контекста (%):" HorizontalAlignment="Left" Margin="146,418,0,-1" VerticalAlignment="Top" Height="38"/>
+                    <Label Content="Глубина контекста:" HorizontalAlignment="Left" Margin="308,418,0,0" VerticalAlignment="Top"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Построение карты Кохонена">
@@ -43,12 +43,19 @@
                     <Button x:Name="buttonCreateLearn" Content="Создать и обучить карту" HorizontalAlignment="Left" Margin="-173,10,0,0" VerticalAlignment="Top" Width="158" RenderTransformOrigin="0.507,0.6" Height="24" Click="ButtonCreateLearnClick"/>
                     <Button x:Name="buttonGetClusterResult" Content="Результаты кластеризации" HorizontalAlignment="Left" Margin="-173,39,0,0" VerticalAlignment="Top" Width="158" Height="24" Click="ButtonGetClusterResultClick"/>
                     <Button x:Name="buttonStopLearning" Content="Остановить обучение" HorizontalAlignment="Left" Margin="-173,68,0,0" VerticalAlignment="Top" Width="158" Height="24" Click="ButtonStopLearningClick"/>
-                    <TextBox x:Name="textBoxWidth" Height="23" TextWrapping="Wrap" Text="5" Margin="-89,97,588,36"/>
-                    <TextBox x:Name="textBoxHeight" Height="23" TextWrapping="Wrap" Text="5" Margin="-89,127,588,6"/>
-                    <TextBox x:Name="textBoxEpochs" Height="23" TextWrapping="Wrap" Text="250" Margin="-89,1,588,238" Grid.Row="1"/>
-                    <Label Content="Ширина:" Margin="-173,97,667,15"/>
-                    <Label Content="Высота:" Margin="-173,123,667,4" RenderTransformOrigin="1.278,3.31"/>
-                    <Label Content="Число эпох:" Margin="-173,153,667,238" Grid.RowSpan="2"/>
+                    <TextBox x:Name="textBoxWidth" Height="23" TextWrapping="Wrap" Text="5" Margin="-89,97,588,35" HorizontalAlignment="Left" Width="38"/>
+                    <TextBox x:Name="textBoxHeight" Height="23" TextWrapping="Wrap" Text="5" Margin="-89,127,588,5" HorizontalAlignment="Left" Width="38"/>
+                    <TextBox x:Name="textBoxEpochs" Height="23" TextWrapping="Wrap" Text="250" Margin="-89,1,588,237" Grid.Row="1" HorizontalAlignment="Left" Width="38"/>
+                    <Label Content="Ширина:" Margin="-173,97,667,15" HorizontalAlignment="Left"/>
+                    <Label Content="Высота:" Margin="-173,123,667,4" RenderTransformOrigin="1.278,3.31" HorizontalAlignment="Left"/>
+                    <Label Content="Число эпох:" Margin="-173,153,667,238" Grid.RowSpan="2" HorizontalAlignment="Left"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Семантический граф">
+                <Grid>
+                    <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible">
+                        <Image Name="pictureBoxGraph" Height="400" MouseWheel="PictureBoxGraphMouseWheel" Stretch="Fill" Width="400" ClipToBounds="True" MouseDown="PictureBoxGraphMouseDown"/>
+                    </ScrollViewer>
                 </Grid>
             </TabItem>
         </TabControl>

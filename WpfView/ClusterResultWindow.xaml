@@ -6,8 +6,21 @@
         xmlns:local="clr-namespace:WpfView"
         mc:Ignorable="d"
         Title="Результаты кластеризации" Height="700" Width="700" WindowStartupLocation="CenterScreen">
+    <Window.CommandBindings>
+        <CommandBinding Command="Save" Executed="SaveAsExecuted"></CommandBinding>
+        <CommandBinding Command="Close" Executed="CloseExecuted"></CommandBinding>
+    </Window.CommandBindings>
+    <Window.InputBindings>
+        <KeyBinding Key="S" Modifiers="Ctrl" Command="Save"></KeyBinding>
+        <KeyBinding Key="X" Modifiers="Ctrl" Command="Close"></KeyBinding>
+    </Window.InputBindings>
     <Grid>
-        <Image Name="pictureBoxClusters" HorizontalAlignment="Left" Height="649" Margin="10,10,0,0" VerticalAlignment="Top" Width="672" Stretch="Fill"/>
-
+        <Menu Height="22" Margin="10,5,0,642" >
+            <MenuItem Height="22" Width="84" BorderBrush="Black" Name="menuItemSaveImage" Header="Файл">
+                <MenuItem Header="Сохранить файл" Command="Save"></MenuItem>
+                <MenuItem Header="Закрыть" Command="Close"></MenuItem>
+            </MenuItem>
+        </Menu>
+        <Image Name="pictureBoxClusters" HorizontalAlignment="Left" Height="632" Margin="10,27,0,0" VerticalAlignment="Top" Width="672" Stretch="Fill"/>
     </Grid>
 </Window>
