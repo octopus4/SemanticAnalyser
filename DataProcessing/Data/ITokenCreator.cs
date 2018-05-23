@@ -1,4 +1,4 @@
-﻿namespace DataProcessing.Data
+﻿namespace DataPreprocessing.Data
 {
     public interface ITokenCreator
     {

@@ -4,8 +4,8 @@ using Visualisation.Drawers;
 using Visualisation.Drawers.Numerical;
 using Visualisation.Drawers.Categorial;
 using Visualisation.Drawers.Semantic;
-using DataProcessing.Data;
-using DataProcessing.Data.Semantic;
+using DataPreprocessing.Data;
+using DataPreprocessing.Data.Semantic;
 using SOM;
 
 namespace Visualisation

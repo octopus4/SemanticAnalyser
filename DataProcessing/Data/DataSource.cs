@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace DataProcessing.Data
+namespace DataPreprocessing.Data
 {
     /// <summary>
     /// Data source, that provides access to the collection of data tokens

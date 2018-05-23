@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace DataProcessing.Data
+namespace DataPreprocessing.Data
 {
     public static class DataMiner
     {

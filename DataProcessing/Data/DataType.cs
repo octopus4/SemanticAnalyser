@@ -1,4 +1,4 @@
-﻿namespace DataProcessing.Data
+﻿namespace DataPreprocessing.Data
 {
     /// <summary>
     /// Type of data in the data vector's unit

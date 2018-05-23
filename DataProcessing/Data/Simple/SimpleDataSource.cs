@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DataProcessing.Data.Simple
+namespace DataPreprocessing.Data.Simple
 {
     /// <summary>
     /// Simple data source, that is used for numeric, categorial and mixed data

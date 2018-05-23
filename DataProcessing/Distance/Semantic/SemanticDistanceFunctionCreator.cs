@@ -1,4 +1,4 @@
-﻿namespace DataProcessing.Distance.Semantic
+﻿namespace DataPreprocessing.Distance.Semantic
 {
     public class SemanticDistanceFunctionCreator : IDistanceFunctionCreator
     {

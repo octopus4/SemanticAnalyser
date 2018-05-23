@@ -7,8 +7,8 @@
     <ProjectGuid>{58FA531D-65B4-4351-BDBD-49E067EADB60}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DataProcessing</RootNamespace>
-    <AssemblyName>DataProcessing</AssemblyName>
+    <RootNamespace>DataPreprocessing</RootNamespace>
+    <AssemblyName>DataPreprocessing</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

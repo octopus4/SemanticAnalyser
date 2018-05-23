@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DataProcessing.Data.Semantic
+namespace DataPreprocessing.Data.Semantic
 {
     /// <summary>
     /// Wrap of the semantic data vector

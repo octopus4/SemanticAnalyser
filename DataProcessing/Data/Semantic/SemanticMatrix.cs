@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DataProcessing.Data.Semantic
+namespace DataPreprocessing.Data.Semantic
 {
     /// <summary>
     /// Matrix of semantic data, is used to store number of occurences of pair (l, r)

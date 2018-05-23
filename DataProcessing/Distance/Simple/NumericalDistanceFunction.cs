@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataProcessing.Distance.Simple
+namespace DataPreprocessing.Distance.Simple
 {
     public class NumericalDistanceFunction : DistanceFunction
     {

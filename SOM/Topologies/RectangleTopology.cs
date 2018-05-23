@@ -1,5 +1,5 @@
-﻿using DataProcessing.Distance;
-using DataProcessing.Distance.Simple;
+﻿using DataPreprocessing.Distance;
+using DataPreprocessing.Distance.Simple;
 
 namespace SOM.Topologies
 {

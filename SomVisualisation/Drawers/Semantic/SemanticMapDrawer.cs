@@ -1,5 +1,5 @@
-﻿using DataProcessing.Data;
-using DataProcessing.Data.Semantic;
+﻿using DataPreprocessing.Data;
+using DataPreprocessing.Data.Semantic;
 using SOM;
 using System.Collections.Generic;
 

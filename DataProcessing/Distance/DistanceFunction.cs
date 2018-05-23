@@ -1,4 +1,4 @@
-﻿namespace DataProcessing.Distance
+﻿namespace DataPreprocessing.Distance
 {
     public abstract class DistanceFunction
     {

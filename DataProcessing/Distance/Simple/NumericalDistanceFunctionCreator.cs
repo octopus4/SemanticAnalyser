@@ -1,4 +1,4 @@
-﻿namespace DataProcessing.Distance.Simple
+﻿namespace DataPreprocessing.Distance.Simple
 {
     public class NumericalDistanceFunctionCreator : IDistanceFunctionCreator
     {

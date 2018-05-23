@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
-using DataProcessing.Data.Semantic;
+using DataPreprocessing.Data.Semantic;
 
-namespace DataProcessing.Distance.Semantic
+namespace DataPreprocessing.Distance.Semantic
 {
     public class SemanticDistanceFunction : DistanceFunction
     {

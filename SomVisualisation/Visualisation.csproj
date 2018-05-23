@@ -63,9 +63,9 @@
     <Compile Include="WPF\WpfPaintTool.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataProcessing\DataProcessing.csproj">
+    <ProjectReference Include="..\DataProcessing\DataPreprocessing.csproj">
       <Project>{58FA531D-65B4-4351-BDBD-49E067EADB60}</Project>
-      <Name>DataProcessing</Name>
+      <Name>DataPreprocessing</Name>
     </ProjectReference>
     <ProjectReference Include="..\SOM\SOM.csproj">
       <Project>{eeba3665-cb30-471a-8d13-338c1a35439c}</Project>

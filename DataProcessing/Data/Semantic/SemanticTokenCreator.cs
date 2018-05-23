@@ -1,4 +1,4 @@
-﻿namespace DataProcessing.Data.Semantic
+﻿namespace DataPreprocessing.Data.Semantic
 {
     public class SemanticTokenCreator : ITokenCreator
     {

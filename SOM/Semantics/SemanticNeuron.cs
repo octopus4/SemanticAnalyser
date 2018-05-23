@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using DataProcessing.Data;
-using DataProcessing.Data.Semantic;
+using DataPreprocessing.Data;
+using DataPreprocessing.Data.Semantic;
 
 namespace SOM.Semantics
 {

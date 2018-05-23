@@ -1,4 +1,4 @@
-﻿namespace DataProcessing.Data.Simple
+﻿namespace DataPreprocessing.Data.Simple
 {
     public class SimpleTokenCreator : ITokenCreator
     {

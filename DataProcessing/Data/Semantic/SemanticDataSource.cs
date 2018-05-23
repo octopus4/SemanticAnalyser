@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DataProcessing.Data.Semantic
+namespace DataPreprocessing.Data.Semantic
 {
     /// <summary>
     /// Source, which produces, fills and contains collection of <see cref="SemanticDataToken"/>

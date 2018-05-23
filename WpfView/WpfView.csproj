@@ -117,9 +117,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataProcessing\DataProcessing.csproj">
+    <ProjectReference Include="..\DataProcessing\DataPreprocessing.csproj">
       <Project>{58FA531D-65B4-4351-BDBD-49E067EADB60}</Project>
-      <Name>DataProcessing</Name>
+      <Name>DataPreprocessing</Name>
     </ProjectReference>
     <ProjectReference Include="..\SomVisualisation\Visualisation.csproj">
       <Project>{056A61CE-F6FF-43EF-AD27-EFF65FE5099F}</Project>

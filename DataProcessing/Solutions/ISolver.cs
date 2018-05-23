@@ -1,6 +1,6 @@
-﻿using DataProcessing.Data;
+﻿using DataPreprocessing.Data;
 
-namespace DataProcessing.Solutions
+namespace DataPreprocessing.Solutions
 {
     /// <summary>
     /// Interface for solvers of "What-If" task

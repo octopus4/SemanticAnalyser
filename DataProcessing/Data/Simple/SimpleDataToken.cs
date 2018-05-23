@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataProcessing.Data.Simple
+namespace DataPreprocessing.Data.Simple
 {
     public class SimpleDataToken : DataToken
     {

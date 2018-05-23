@@ -4,7 +4,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Microsoft.Win32;
-using DataProcessing.Data;
+using DataPreprocessing.Data;
 using SOM;
 using Visualisation;
 using Visualisation.WPF;

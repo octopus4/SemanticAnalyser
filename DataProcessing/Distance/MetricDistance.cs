@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataProcessing.Distance
+namespace DataPreprocessing.Distance
 {
     internal static class MetricDistance
     {

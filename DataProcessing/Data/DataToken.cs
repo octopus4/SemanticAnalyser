@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace DataProcessing.Data
+namespace DataPreprocessing.Data
 {
     /// <summary>
     /// Wrap on the classical vector representation of data

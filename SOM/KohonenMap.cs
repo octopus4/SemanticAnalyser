@@ -1,6 +1,6 @@
-﻿using DataProcessing.Data;
-using DataProcessing.Distance;
-using DataProcessing.Solutions;
+﻿using DataPreprocessing.Data;
+using DataPreprocessing.Distance;
+using DataPreprocessing.Solutions;
 
 using SOM.Topologies;
 using SOM.Neighborhoods;
@@ -9,7 +9,7 @@ using SOM.Learnings;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using DataProcessing.Data.Semantic;
+using DataPreprocessing.Data.Semantic;
 
 namespace SOM
 {

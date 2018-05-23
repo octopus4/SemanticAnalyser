@@ -88,9 +88,9 @@
     <Compile Include="Topologies\TopologyType.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataProcessing\DataProcessing.csproj">
+    <ProjectReference Include="..\DataProcessing\DataPreprocessing.csproj">
       <Project>{58FA531D-65B4-4351-BDBD-49E067EADB60}</Project>
-      <Name>DataProcessing</Name>
+      <Name>DataPreprocessing</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

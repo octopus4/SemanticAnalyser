@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace DataProcessing.Data
+namespace DataPreprocessing.Data
 {
     [Serializable]
     public class FileNotParsedException : Exception

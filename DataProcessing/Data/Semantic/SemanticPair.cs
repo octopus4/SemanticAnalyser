@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DataProcessing.Data.Semantic
+namespace DataPreprocessing.Data.Semantic
 {
     /// <summary>
     /// Pair of word id in the dictionary and frequence
