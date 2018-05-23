@@ -10,15 +10,15 @@ namespace Visualisation.Drawers.Categorial
         private IEnumerable<string> Values { get; }
 
         public CategorialMapDrawer(Dictionary<Neuron, List<DataToken>> clusterResult,
-            int index, int cellWidth, int cellHeight, CanvasCreator canvasCreator, IEnumerable<string> values)
-            : base(clusterResult, index, cellWidth, cellHeight, canvasCreator)
+            int index, int cellWidth, int cellHeight, CanvasCreator componentCreator, IEnumerable<string> values)
+            : base(clusterResult, index, cellWidth, cellHeight, componentCreator)
         {
             Values = values;
         }
 
         internal override Canvas Draw(int clusterWidth, int clusterHeight)
         {
-            Canvas result = CanvasCreator.CreateCanvas(clusterWidth, clusterHeight);
+            Canvas result = ComponentCreator.CreateCanvas(clusterWidth, clusterHeight);
             PaintTool mapGraphics = result.Tool;
 
             Dictionary<string, ColorAdapter> palette = DetectColors(Values);
@@ -36,7 +36,7 @@ namespace Visualisation.Drawers.Categorial
                 int x = (int)(pair.Key.Position.X * CellWidth);
                 int y = (int)(pair.Key.Position.Y * CellHeight);
 
-                mapGraphics.DrawCluster(x, y, CellWidth, CellHeight);
+                mapGraphics.DrawArea(x, y, CellWidth, CellHeight, color);
             }
 
             return result;

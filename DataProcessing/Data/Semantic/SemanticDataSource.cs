@@ -20,7 +20,7 @@ namespace DataProcessing.Data.Semantic
         /// <summary>
         /// Word separators, which are needed to split the text to the array of separte words
         /// </summary>
-        private static readonly char[] WordSeparators = new char[] { ' ', '.', ',', '?', '!', '"', '-', ';' };
+        private static readonly char[] WordSeparators = new char[] { ' ', '.', ',', '?', '!', '"', '-', ';', '\r', '\n' };
         /// <summary>
         /// Semantic matrix that contains left and right context of an each word in the text
         /// </summary>
@@ -32,7 +32,7 @@ namespace DataProcessing.Data.Semantic
         /// <param name="text">Text on any language (natural or artificial)</param>
         /// <param name="contextSize">Size of the context in each <see cref="SemanticDataToken"/></param>
         public SemanticDataSource(string text, int contextSize, int contextDistance)
-            : base(Parse(text, contextSize, contextDistance), DefaultType, DefaultFlow, new SemanticDataTokenFactory())
+            : base(Parse(text, contextSize, contextDistance), DefaultType, DefaultFlow, new SemanticTokenCreator())
         {
         }
 
@@ -45,10 +45,12 @@ namespace DataProcessing.Data.Semantic
         private static ICollection<string[]> Parse(string text, int contextSize, int contextDistance)
         {
             string[] words = text.ToLower().Split(WordSeparators, StringSplitOptions.RemoveEmptyEntries);
-            string[] distinctWords = words.Distinct().ToList().ToArray();
-            SemanticDataToken.ContextSize = (int)(distinctWords.Length * (contextSize / 100.0));
+            string[] dictionary = words
+                .Distinct()
+                .ToArray();
+            SemanticDataToken.ContextSize = (int)(dictionary.Length * (contextSize / 100.0));
 
-            Matrix = new SemanticMatrix(words, distinctWords.ToArray(), contextDistance);
+            Matrix = new SemanticMatrix(words, dictionary, contextDistance);
 
             return Matrix;
         }

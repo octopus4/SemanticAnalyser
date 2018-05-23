@@ -9,13 +9,12 @@ namespace SOM
         public object[] Weights { get; protected set; }
         public Point Position { get; private set; }
 
-        public Neuron(DataToken token, int x, int y)
+        protected Neuron(int x, int y)
         {
             Position = new Point(x, y);
-            InitWeights(token);
         }
 
-        protected abstract void InitWeights(DataToken token);
+        public abstract void InitWeights(DataToken token);
 
         public abstract void CorrectWeights(DataToken token, double diminishingFactor);
     }

@@ -5,22 +5,31 @@ namespace Visualisation
 {
     public abstract class PaintTool : IDisposable
     {
-        public float FontSize { get; }
+        protected static readonly double NodeRadiusScale = 1.5;
+
+        public double Scale { get; set; }
+        public double FontSize { get; }
         public int? Opacity { get; set; }
 
-        internal PaintTool()
+        protected PaintTool(float fontSize, double scale)
         {
-#warning magic number => put into ctor
-            FontSize = 24.0f;
+            FontSize = fontSize;
+            Scale = scale;
         }
 
         internal abstract void StartRendering();
         internal abstract void SetColor(ColorAdapter color);
-        internal abstract void DrawNode(float x, float y, Node node);
-        internal abstract void DrawLine(float x1, float y1, float x2, float y2, ColorAdapter color);
-        internal abstract void DrawCluster(float x, float y, float width, float height);
-        internal abstract void DrawCluster(float x, float y, float width, float height, ColorAdapter color);
-        internal abstract void DrawText(string text, float x, float y);
-        public abstract void Dispose();
+        internal abstract void DrawNode(double x, double y, Node node);
+        internal abstract void DrawLine(double x1, double y1, double x2, double y2, ColorAdapter color);
+        internal abstract void DrawArea(double x, double y, double width, double height);
+        internal abstract void DrawArea(double x, double y, double width, double height, ColorAdapter color);
+        internal abstract void DrawText(string text, double x, double y);
+        protected abstract void Dispose(bool disposing);
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

@@ -54,7 +54,7 @@
             <TabItem Header="Семантический граф">
                 <Grid>
                     <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible">
-                        <Image Name="pictureBoxGraph" Height="400" MouseWheel="PictureBoxGraphMouseWheel" Stretch="Fill" Width="400" ClipToBounds="True" MouseDown="PictureBoxGraphMouseDown"/>
+                        <Image Name="pictureBoxGraph" Height="400" MouseWheel="PictureBoxGraphMouseWheel" Stretch="Fill" Width="600" ClipToBounds="True" MouseDown="PictureBoxGraphMouseDown" MouseUp="PictureBoxGraphMouseUp" MouseMove="PictureBoxGraphMouseMove"/>
                     </ScrollViewer>
                 </Grid>
             </TabItem>

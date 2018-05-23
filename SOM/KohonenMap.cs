@@ -9,6 +9,7 @@ using SOM.Learnings;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using DataProcessing.Data.Semantic;
 
 namespace SOM
 {
@@ -51,7 +52,7 @@ namespace SOM
         /// <summary>
         /// Learning diminishing function
         /// </summary>
-        private LearningFunction Learning { get; }
+        private ILearningFunction LearningRateFunction { get; }
         /// <summary>
         /// Weights distance function
         /// </summary>
@@ -90,7 +91,7 @@ namespace SOM
         /// <param name="neuronFactory">Neuron factory</param>
         /// <param name="distanceFactory">Distance function factory</param>
         public KohonenMap
-            (int width, int height, int epochCount, DataSource source, Metric metric, INeuronFactory neuronFactory, IDistanceFunctionFactory distanceFactory)
+            (int width, int height, int epochCount, DataSource source, Metric metric, INeuronCreator neuronFactory, IDistanceFunctionCreator distanceFactory)
         {
             Width = width;
             Height = height;
@@ -100,10 +101,13 @@ namespace SOM
 
             Source = source;
             Topology = new RectangleTopology(metric);
-            Learning = new LinearLearningFunction(epochCount);
+
+            LearningRateFunction = source.Length > 50 ?
+                (ILearningFunction)new InverseLearningFunction(source.Length) :
+                new LinearLearningFunction(EpochCount);
             Neighborhood = new GaussianNeighborhoodFunction();
 
-            WeightsDistance = distanceFactory.Produce(metric);
+            WeightsDistance = distanceFactory.Create(metric);
 
             InitNeurons(neuronFactory);
         }
@@ -112,7 +116,7 @@ namespace SOM
         /// Initializes neurons of the map
         /// </summary>
         /// <param name="factory">Abstract neuron factory</param>
-        private void InitNeurons(INeuronFactory factory)
+        private void InitNeurons(INeuronCreator factory)
         {
             Neurons = new List<Neuron>();
             for (int i = 0; i < Width; i++)
@@ -120,7 +124,8 @@ namespace SOM
                 for (int j = 0; j < Height; j++)
                 {
                     DataToken token = Source.GetRandomToken();
-                    Neuron neuron = factory.Produce(token, j, i);
+                    Neuron neuron = factory.Produce(j, i);
+                    neuron.InitWeights(token);
                     Neurons.Add(neuron);
                 }
             }
@@ -176,31 +181,11 @@ namespace SOM
                     distance = newDistance;
                 }
             }
+
             return distance;
             /* actually, this is an error - it's distance in n-dimensional space between
              * vector of neuron's weights and vector of token's weights (data in DataToken)
              * */
-        }
-
-        /// <summary>
-        /// Finds and returns the best matching unit in neurons for this token
-        /// </summary>
-        /// <param name="token">Instance of <see cref="DataToken"/></param>
-        /// <returns>BMU</returns>
-        public Neuron FindBMU(DataToken token)
-        {
-            Neuron bmu = Neurons[0];
-            double distance = WeightsDistance.Calculate(bmu.Weights, token.Values);
-            for (int i = 1; i < Neurons.Count; i++)
-            {
-                double newDistance = WeightsDistance.Calculate(Neurons[i].Weights, token.Values);
-                if (Math.Abs(newDistance) < Math.Abs(distance))
-                {
-                    bmu = Neurons[i];
-                    distance = newDistance;
-                }
-            }
-            return bmu;
         }
 
         /// <summary>
@@ -209,15 +194,18 @@ namespace SOM
         /// <param name="token">Instance of <see cref="DataToken"/></param>
         /// <param name="clusteringResults">Results of clustering</param>
         /// <returns></returns>
-        private Neuron FindBMU(DataToken token, Dictionary<Neuron, List<DataToken>> clusteringResults)
+        public Neuron FindBMU(DataToken token, Dictionary<Neuron, List<DataToken>> clusteringResults = null)
         {
             Neuron bmu = Neurons[0];
+            int i = 1;
+            Func<bool> isClusterNotEmpty = clusteringResults != null ?
+                () => clusteringResults[Neurons[i]].Count > 0 : (Func<bool>)null;
             double distance = WeightsDistance.Calculate(bmu.Weights, token.Values);
-            for (int i = 1; i < Neurons.Count; i++)
+            for (i = 1; i < Neurons.Count; i++)
             {
                 double newDistance = WeightsDistance.Calculate(Neurons[i].Weights, token.Values);
                 if (Math.Abs(newDistance) < Math.Abs(distance)
-                    && clusteringResults[Neurons[i]].Count > 0)
+                   && (isClusterNotEmpty == null || isClusterNotEmpty.Invoke()))
                 {
                     bmu = Neurons[i];
                     distance = newDistance;
@@ -240,7 +228,7 @@ namespace SOM
                     double distance = Topology.Distance(neuron1.Position, neuron2.Position);
                     if (!result.ContainsKey(distance))
                     {
-                        double diminishingFactor = Learning.Calculate(Epoch) * Neighborhood.Calculate(distance);
+                        double diminishingFactor = LearningRateFunction.Calculate(Epoch) * Neighborhood.Calculate(distance);
                         result.Add(distance, diminishingFactor);
                     }
                 }
@@ -316,7 +304,7 @@ namespace SOM
                     return i;
                 }
             }
-            throw new ArgumentException("Token does not contain CLASS argument");
+            throw new ArgumentException("Token does not contain CLASS attribute");
         }
     }
 }

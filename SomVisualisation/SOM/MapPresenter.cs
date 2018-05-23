@@ -10,10 +10,8 @@ using SOM;
 
 namespace Visualisation
 {
-    public class VisualMap : VisualData
+    public class MapPresenter : DataPresenter
     {
-        private DataType MapType { get; set; }
-
         private int NeuronWidth { get; set; }
         private int NeuronHeight { get; set; }
 
@@ -24,8 +22,8 @@ namespace Visualisation
 
         public List<string> SelectedNeuronRecords { get; private set; }
 
-        public VisualMap(int width, int height, DataSource source, CanvasCreator canvasCreator, string[] headers)
-            : base(width, height, source, canvasCreator)
+        public MapPresenter(int width, int height, DataSource source, CanvasCreator componentCreator, string[] headers, IView view)
+            : base(width, height, source, componentCreator, view)
         {
             Headers = headers;
         }
@@ -36,6 +34,7 @@ namespace Visualisation
 
             SetCellSize(ClusterResults.Keys);
             DrawMaps();
+            Invalidate();
         }
 
         private void SetCellSize(IEnumerable<Neuron> neurons)
@@ -62,39 +61,36 @@ namespace Visualisation
             {
                 case DataType.Numerical:
                     var numericalData = SourceTokens.Select(token => double.Parse(token.Values[index].ToString()));
-                    MapDrawer<double> numericalDrawer = new NumericalMapDrawer(ClusterResults, index, NeuronWidth, NeuronHeight, ComponentFactory, numericalData);
+                    MapDrawer<double> numericalDrawer = new NumericalMapDrawer(ClusterResults, index, NeuronWidth, NeuronHeight, ComponentCreator, numericalData);
                     return numericalDrawer.Draw(Width, Height);
 
                 case DataType.Categorial:
                     var categorialData = SourceTokens.Select(token => token.Values[index].ToString());
-                    MapDrawer<string> categorialDrawer = new CategorialMapDrawer(ClusterResults, index, NeuronWidth, NeuronHeight, ComponentFactory, categorialData);
+                    MapDrawer<string> categorialDrawer = new CategorialMapDrawer(ClusterResults, index, NeuronWidth, NeuronHeight, ComponentCreator, categorialData);
                     return categorialDrawer.Draw(Width, Height);
 
                 case DataType.Semantic:
-                    MapDrawer<SemanticPair[]> semanticDrawer = new SemanticMapDrawer(ClusterResults, index, NeuronWidth, NeuronHeight, ComponentFactory);
+                    MapDrawer<SemanticPair[]> semanticDrawer = new SemanticMapDrawer(ClusterResults, index, NeuronWidth, NeuronHeight, ComponentCreator);
                     return semanticDrawer.Draw(Width, Height);
                 default:
                     return null;
             }
         }
 
-        public Canvas Show()
+        protected override void MouseClick(double x, double y)
+        {
+            double i = x / NeuronWidth;
+            double j = y / NeuronHeight;
+
+            Neuron neuron = ClusterResults.Keys.First(n => n.Position.X == i && n.Position.Y == j);
+            SelectedNeuronRecords = ClusterResults[neuron].Select(token => token.Values[Index].ToString()).ToList();
+        }
+
+        protected override void OnInvalidate()
         {
             List<string> keys = Maps.Keys.ToList();
             string attribute = keys[Index];
-            return Maps[attribute];
-        }
-
-        public void MouseClick(object sender, int x, int y)
-        {
-            int index = (int)sender;
-
-            int i = x / NeuronWidth;
-            int j = y / NeuronHeight;
-
-            Neuron neuron = ClusterResults.Keys.First(n => n.Position.X == i && n.Position.Y == j);
-            SelectedNeuronRecords = ClusterResults[neuron].Select(token => token.Values[index].ToString()).ToList();
+            Image = Maps[attribute];
         }
     }
-#warning Add statistics to the map output
 }

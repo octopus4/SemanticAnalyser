@@ -4,12 +4,12 @@
     {
         protected double Norm { get; }
 
-        public DistanceFunction(Metric metric)
+        protected DistanceFunction(Metric metric)
         {
             Norm = (int)metric + 1;
         }
 
-        public DistanceFunction(double norm)
+        protected DistanceFunction(double norm)
         {
             Norm = norm;
         }

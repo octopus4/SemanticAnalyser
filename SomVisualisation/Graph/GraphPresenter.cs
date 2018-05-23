@@ -7,20 +7,24 @@ using SOM;
 
 namespace Visualisation.Graph
 {
-    public class VisualGraph : VisualData
+    public class GraphPresenter : DataPresenter
     {
         private List<Node> Nodes { get; set; }
         private SemanticMatrix Matrix { get; set; }
         private ColorAdapter SelectedColor { get; set; }
         private PaintTool Tool { get; set; }
+        public int RelativeWidth { get; private set; }
+        public int RelativeHeight { get; private set; }
 
-        public Canvas Image { get; private set; }
-
-        public VisualGraph(int width, int height, DataSource source, CanvasCreator canvasCreator)
-            : base(width, height, source, canvasCreator)
+        public GraphPresenter(int width, int height, DataSource source, CanvasCreator componentCreator, IView view)
+            : base(width, height, source, componentCreator, view)
         {
             Matrix = SemanticDataSource.Matrix;
             InitNodes();
+            Scale = 1;
+            CaptureArea = new Rectangle(-0.5, -0.5, 1, 1);
+            RelativeHeight = Height;
+            RelativeWidth = Width;
         }
 
         private void InitNodes()
@@ -41,7 +45,7 @@ namespace Visualisation.Graph
             ClusterResults = clusterResults;
             ColorizeNodes();
             MakeGraph();
-            DrawGraph();
+            Invalidate();
         }
 
         private void MakeGraph()
@@ -49,10 +53,9 @@ namespace Visualisation.Graph
             for (int i = 0; i < Matrix.Length; i++)
             {
                 double[] vector = Matrix.GetVector(1, i);
-                double[] sortedVector = new double[vector.Length];
-                vector.CopyTo(sortedVector, 0);
-                Array.Sort(sortedVector);
-                int index = (int)(0.5 * sortedVector.Length);
+                double[] sortedVector = vector.OrderBy(value => value).ToArray();
+
+                int index = (int)(sortedVector.Length / 2.0);
                 double stepValue = sortedVector[index];
                 for (int j = 0; j < Matrix.Length; j++)
                 {
@@ -73,7 +76,7 @@ namespace Visualisation.Graph
 
         private void ColorizeNodes()
         {
-            List<Neuron> neurons = ClusterResults.Keys.ToList();
+            List<Neuron> neurons = ClusterResults.Keys.Where(key => ClusterResults[key].Count > 0).ToList();
             ColorAdapter[] palette = Colorizer.CreatePalette(neurons.Count);
             int colorIndex = 0;
             foreach (Neuron neuron in neurons)
@@ -83,6 +86,13 @@ namespace Visualisation.Graph
                 foreach (Node node in nodes)
                 {
                     node.Color = palette[colorIndex];
+                    foreach (Node neighbor in nodes)
+                    {
+                        if (node != neighbor)
+                        {
+                            node.MoveToward(neighbor);
+                        }
+                    }
                 }
                 colorIndex++;
             }
@@ -90,34 +100,42 @@ namespace Visualisation.Graph
 
         private void DrawGraph()
         {
-            Image = ComponentFactory.CreateCanvas(Width, Height);
+            Image = ComponentCreator.CreateCanvas(Width, Height);
+            Image.Init();
 
             using (Tool = Image.Tool)
             {
+                Tool.Scale = Scale;
                 Tool.StartRendering();
-                Tool.DrawCluster(0, 0, Width, Height);
+                Tool.DrawArea(0, 0, Width, Height);
+                Nodes.ForEach(node => node.ToRelative(CaptureArea));
                 foreach (Node node in Nodes)
                 {
-                    Show(node, Tool);
+                    Show(node);
                 }
             }
         }
 
-        private void Show(Node node, PaintTool tool)
+        private void Show(Node node)
         {
             if (node.ConnectedTo.Count == 0)
             {
                 return;
             }
 
-            float x = ToScreen(node.X, Width);
-            float y = ToScreen(node.Y, Height);
+            double x = ToScreen(node.RelativeX, Width);
+            double y = ToScreen(node.RelativeY, Height);
 
             if (SelectedColor != null)
             {
                 Tool.Opacity = SelectedColor != node.Color ? 32 : (int?)null;
             }
-            tool.DrawNode(x, y, node);
+            Tool.DrawNode(x, y, node);
+            ShowNeighbors(node, x, y);
+        }
+
+        private void ShowNeighbors(Node node, double x, double y)
+        {
             foreach (Node neighbor in node.ConnectedTo)
             {
                 if (SelectedColor != null)
@@ -128,34 +146,30 @@ namespace Visualisation.Graph
                 {
                     Tool.Opacity = 192;
                 }
-                float neighborX = ToScreen(neighbor.X, Width);
-                float neighborY = ToScreen(neighbor.Y, Height);
-                tool.DrawLine(x, y, neighborX, neighborY, node.Color);
+                double neighborX = ToScreen(neighbor.RelativeX, Width);
+                double neighborY = ToScreen(neighbor.RelativeY, Height);
+                Tool.DrawLine(x, y, neighborX, neighborY, node.Color);
             }
             Tool.Opacity = null;
         }
 
-        private float ToScreen(double coordinate, double transformer)
+        protected sealed override void MouseClick(double x, double y)
         {
-            return (float)transformer * (1 + (float)coordinate) / 2;
-        }
+            double mouseX = FromScreen(x, Width);
+            double mouseY = FromScreen(y, Height);
 
-        private double FromScreen(double coordinate, double transformer)
-        {
-            return 2 * coordinate / transformer - 1;
-        }
-
-        public void MouseClick(int x, int y)
-        {
-            double nodeX = FromScreen(x, Width);
-            double nodeY = FromScreen(y, Height);
-
-            Node selectedNode = Nodes.FirstOrDefault(node => Math.Abs(node.X - nodeX) <= Node.Radius / Width && Math.Abs(node.Y - nodeY) <= Node.Radius / Height);
+            Node selectedNode = Nodes.FirstOrDefault(node => IsChoosen(node, mouseX, mouseY));
             SelectedColor = selectedNode?.Color;
             Invalidate();
         }
 
-        private void Invalidate()
+        private bool IsChoosen(Node node, double mouseX, double mouseY)
+        {
+            return Math.Abs(node.RelativeX - mouseX) <= Node.Radius / (Scale * Width)
+                && Math.Abs(node.RelativeY - mouseY) <= Node.Radius / (Scale * Height);
+        }
+
+        protected sealed override void OnInvalidate()
         {
             DrawGraph();
         }

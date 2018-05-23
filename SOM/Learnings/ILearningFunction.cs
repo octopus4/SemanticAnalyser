@@ -1,6 +1,6 @@
 ﻿namespace SOM.Learnings
 {
-    internal interface LearningFunction
+    internal interface ILearningFunction
     {
         double Calculate(int epochNumber);
     }

@@ -1,65 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Microsoft.Win32;
 using DataProcessing.Data;
+using SOM;
 using Visualisation;
 using Visualisation.WPF;
-using System.IO;
-using Microsoft.Win32;
-using System.ComponentModel;
 
 namespace WpfView
 {
     /// <summary>
     /// Логика взаимодействия для ClusterResultWindow.xaml
     /// </summary>
-    public partial class ClusterResultWindow : Window
+    public partial class ClusterResultWindow : Window, IView
     {
-        private VisualMap Map { get; }
+        /// <summary>
+        /// Visual map image size (width or height)
+        /// </summary>
+        private static readonly int MapImageSize = 600;
 
-        private int NeuronWidth { get; set; }
-        private int NeuronHeight { get; set; }
+        private MapPresenter Map { get; }
 
-        private int TokenClassIndex { get; set; }
-
-        public ClusterResultWindow(VisualMap visualMap, DataFlow[] flowTypes)
+        public ClusterResultWindow(DataSource source, ClusterizationResult result, string[] headers)
         {
             InitializeComponent();
-
-            Map = visualMap;
-            Map.Index = 1;
-            DrawMap();
-        }
-
-        private object[] FilterHeaders(string[] headers, DataFlow[] flowTypes)
-        {
-            List<object> result = new List<object>();
-            for (int i = 0; i < flowTypes.Length; i++)
+            CanvasCreator creator = new WpfCanvasCreator();
+            Map = new MapPresenter(MapImageSize, MapImageSize, source, creator, headers, this)
             {
-                if (flowTypes[i] != DataFlow.NonUsed)
-                {
-                    result.Add(headers[i]);
-                }
-            }
-            return result.ToArray();
-        }
-
-        private void ComboBoxMapsSelectedIndexChanged(object sender, EventArgs e)
-        {
-            Map.Index = 1;
-            DrawMap();
-        }
-
-        private void DrawMap()
-        {
-            WPFCanvas canvas = (WPFCanvas)Map.Show();
-            RenderTargetBitmap bmp = new RenderTargetBitmap(Map.Width, Map.Height, 96, 96, PixelFormats.Default);
-            bmp.Render(canvas.Visual);
-            pictureBoxClusters.Source = bmp;
-            pictureBoxClusters.InvalidateVisual();
+                Index = 1
+            };
+            Map.Init(result.NeuronsToTokensMap);
         }
 
         private void PictureBoxClustersMouseClick(object sender, MouseEventArgs e)
@@ -68,8 +40,7 @@ namespace WpfView
             int x = (int)(position.X * Map.Width * 1.0 / pictureBoxClusters.Width);
             int y = (int)(position.Y * Map.Height * 1.0 / pictureBoxClusters.Height);
 
-            sender = 1;
-            Map.MouseClick(sender, x, y);
+            Map.MouseDown(x, y);
         }
 
         private void SaveAsExecuted(object sender, ExecutedRoutedEventArgs e)
@@ -87,9 +58,10 @@ namespace WpfView
             encoder.Save(fileDialog.OpenFile());
         }
 
-        private void CloseExecuted(object sender, ExecutedRoutedEventArgs e)
+        public void Update(Canvas canvas)
         {
-
+            pictureBoxClusters.Source = (ImageSource)canvas.Render();
+            pictureBoxClusters.InvalidateVisual();
         }
     }
 }

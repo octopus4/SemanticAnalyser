@@ -8,11 +8,9 @@
         Title="Результаты кластеризации" Height="700" Width="700" WindowStartupLocation="CenterScreen">
     <Window.CommandBindings>
         <CommandBinding Command="Save" Executed="SaveAsExecuted"></CommandBinding>
-        <CommandBinding Command="Close" Executed="CloseExecuted"></CommandBinding>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="S" Modifiers="Ctrl" Command="Save"></KeyBinding>
-        <KeyBinding Key="X" Modifiers="Ctrl" Command="Close"></KeyBinding>
     </Window.InputBindings>
     <Grid>
         <Menu Height="22" Margin="10,5,0,642" >

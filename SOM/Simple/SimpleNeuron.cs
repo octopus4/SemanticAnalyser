@@ -4,12 +4,12 @@ namespace SOM.Simple
 {
     public class SimpleNeuron : Neuron
     {
-        public SimpleNeuron(DataToken token, int x, int y)
-            : base(token, x, y)
+        public SimpleNeuron(int x, int y)
+            : base(x, y)
         {
         }
 
-        protected override void InitWeights(DataToken token)
+        public override void InitWeights(DataToken token)
         {
             Weights = new object[token.Length];
             for (int i = 0; i < token.Length; i++)

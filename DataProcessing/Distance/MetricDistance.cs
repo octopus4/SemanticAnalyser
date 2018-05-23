@@ -2,7 +2,7 @@
 
 namespace DataProcessing.Distance
 {
-    static class MetricDistance
+    internal static class MetricDistance
     {
 
         public static double Distance(double[] differences, double norm)

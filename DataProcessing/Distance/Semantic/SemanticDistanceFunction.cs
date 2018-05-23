@@ -1,8 +1,7 @@
-﻿using DataProcessing.Data.Semantic;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System;
+using DataProcessing.Data.Semantic;
 
 namespace DataProcessing.Distance.Semantic
 {
@@ -37,8 +36,9 @@ namespace DataProcessing.Distance.Semantic
 
                 distance += Calculate(differences);
             }
+            distance /= (vector1.Length - 1);
 
-            return distance /= vector1.Length - 1;
+            return distance;
         }
 
         private double Calculate(SemanticPair[,] differences)
@@ -48,8 +48,9 @@ namespace DataProcessing.Distance.Semantic
             {
                 distance += Math.Abs(differences[i, 0].Frequence - differences[i, 1].Frequence);
             }
+            distance /= differences.GetLength(0);
 
-            return distance /= differences.GetLength(0);
+            return distance;
         }
     }
 }

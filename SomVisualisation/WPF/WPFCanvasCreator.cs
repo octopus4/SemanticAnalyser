@@ -1,10 +1,12 @@
 ﻿namespace Visualisation.WPF
 {
-    public class WPFCanvasCreator : CanvasCreator
+    public class WpfCanvasCreator : CanvasCreator
     {
         internal override Canvas CreateCanvas(int width, int height)
         {
-            return new WPFCanvas(width, height);
+            Canvas canvas = new WpfCanvas(width, height);
+            canvas.Init();
+            return canvas;
         }
     }
 }

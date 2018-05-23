@@ -7,7 +7,7 @@ namespace DataProcessing.Data
     /// <summary>
     /// Data source, that provides access to the collection of data tokens
     /// </summary>
-    public abstract class DataSource : IEnumerable
+    public abstract class DataSource : IEnumerable<DataToken>
     {
         /// <summary>
         /// Static random generator, that is used in the <see cref="GetRandomToken"/> method
@@ -40,8 +40,8 @@ namespace DataProcessing.Data
         /// <param name="flowMask">Mask of the <see cref="DataToken"/> components flows</param>
         /// <param name="factory">Token factory</param>
         /// <param name="separator">Separator symbol</param>
-        public DataSource
-            (ICollection<string[]> source, DataType[] typeMask, DataFlow[] flowMask, ITokenFactory factory, char? separator = null)
+        protected DataSource
+            (ICollection<string[]> source, DataType[] typeMask, DataFlow[] flowMask, ITokenCreator factory, char? separator = null)
         {
             FlowTypes = flowMask;
             DataTypes = typeMask;
@@ -56,13 +56,14 @@ namespace DataProcessing.Data
         /// <param name="data">Data that has been parsed into a collection of string arrays</param>
         /// <param name="typeMask">Mask of the <see cref="DataToken"/> components types</param>
         /// <param name="flowMask">Mask of the <see cref="DataToken"/> components flows</param>
-        /// <param name="factory">Token factory</param>
-        private void InitTokens(IEnumerable<string[]> data, DataType[] typeMask, DataFlow[] flowMask, ITokenFactory factory)
+        /// <param name="tokenCreator">Token factory</param>
+        private void InitTokens(IEnumerable<string[]> data, DataType[] typeMask, DataFlow[] flowMask, ITokenCreator tokenCreator)
         {
             int index = 0;
             foreach (string[] values in data)
             {
-                Tokens[index] = factory.ProduceToken(values, typeMask, flowMask);
+                Tokens[index] = tokenCreator.Create();
+                Tokens[index].InitValues(values, typeMask, flowMask);
                 index++;
             }
         }
@@ -77,15 +78,20 @@ namespace DataProcessing.Data
         }
 
         /// <summary>
-        /// Returns an instance of <see cref="IEnumerator"/> that enumerates data tokens in the <see cref="DataSource"/>
+        /// Returns an instance of <see cref="IEnumerator{DataToken}"/> that enumerates data tokens in the <see cref="DataSource"/>
         /// </summary>
         /// <returns></returns>
-        public IEnumerator GetEnumerator()
+        public IEnumerator<DataToken> GetEnumerator()
         {
             foreach (DataToken token in Tokens)
             {
                 yield return token;
             }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

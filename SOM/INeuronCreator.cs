@@ -5,7 +5,7 @@ namespace SOM
     /// <summary>
     /// Abstract Kohonen Map neuron factory
     /// </summary>
-    public interface INeuronFactory
+    public interface INeuronCreator
     {
         /// <summary>
         /// Produces single neuron
@@ -14,6 +14,6 @@ namespace SOM
         /// <param name="x">X coordinate on the map</param>
         /// <param name="y">Y coordinate on the map</param>
         /// <returns>Instance of <see cref="Neuron"/></returns>
-        Neuron Produce(DataToken token, int x, int y);
+        Neuron Produce(int x, int y);
     }
 }

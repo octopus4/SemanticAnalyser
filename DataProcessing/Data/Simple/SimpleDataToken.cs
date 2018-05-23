@@ -1,27 +1,32 @@
-﻿namespace DataProcessing.Data.Simple
+﻿using System;
+
+namespace DataProcessing.Data.Simple
 {
     public class SimpleDataToken : DataToken
     {
-        public SimpleDataToken(string[] values, DataType[] typeMask, DataFlow[] flowMask)
-            : base(values, typeMask, flowMask)
+        public override void InitValues(string[] values, DataType[] typeMask, DataFlow[] flowMask)
         {
-        }
+            Check(nameof(typeMask), typeMask);
+            Check(nameof(flowMask), flowMask);
 
-        protected override void InitValues(string[] values, DataType[] typeMask, DataFlow[] flowMask)
-        {
             Values = new object[values.Length];
 
-            if (typeMask != null && flowMask != null)
-            {
-                Types = new DataType[typeMask.Length];
-                Flows = new DataFlow[flowMask.Length];
-            }
+            Types = new DataType[typeMask.Length];
+            Flows = new DataFlow[flowMask.Length];
 
             for (int i = 0; i < values.Length; i++)
             {
                 Values[i] = CalculateValue(typeMask[i], flowMask[i], values[i]);
                 Types[i] = typeMask[i];
                 Flows[i] = flowMask[i];
+            }
+        }
+
+        private void Check(string parameterName, object parameterValue)
+        {
+            if (parameterValue == null)
+            {
+                throw new ArgumentNullException(parameterName, $"{parameterName} shoul not be null");
             }
         }
 

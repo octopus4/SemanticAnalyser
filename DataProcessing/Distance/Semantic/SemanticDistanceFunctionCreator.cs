@@ -1,8 +1,8 @@
 ﻿namespace DataProcessing.Distance.Semantic
 {
-    public class SemanticDistanceFunctionFactory : IDistanceFunctionFactory
+    public class SemanticDistanceFunctionCreator : IDistanceFunctionCreator
     {
-        public DistanceFunction Produce(Metric metric)
+        public DistanceFunction Create(Metric metric)
         {
             return new SemanticDistanceFunction(metric);
         }

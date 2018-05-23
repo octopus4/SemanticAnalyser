@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataProcessing.Distance.Simple
+namespace Visualisation
 {
-    class CategorialDistanceFunction
+    public interface IView
     {
+        void Update(Canvas canvas);
     }
 }

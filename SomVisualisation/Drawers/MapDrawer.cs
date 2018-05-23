@@ -10,14 +10,14 @@ namespace Visualisation.Drawers
         protected int CellWidth { get; }
         protected int CellHeight { get; }
 
-        protected CanvasCreator CanvasCreator { get; }
+        protected CanvasCreator ComponentCreator { get; }
         protected Dictionary<Neuron, List<DataToken>> ClusterResult { get; }
         protected int Index { get; }
 
-        public MapDrawer(Dictionary<Neuron, List<DataToken>> clusterResult,
-            int index, int cellWidth, int cellHeight, CanvasCreator canvasCreator)
+        protected MapDrawer(Dictionary<Neuron, List<DataToken>> clusterResult,
+            int index, int cellWidth, int cellHeight, CanvasCreator componentCreator)
         {
-            CanvasCreator = canvasCreator;
+            ComponentCreator = componentCreator;
             ClusterResult = clusterResult;
             Index = index;
 

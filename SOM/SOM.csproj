@@ -66,14 +66,15 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="INeuronFactory.cs" />
+    <Compile Include="INeuronCreator.cs" />
+    <Compile Include="Learnings\InverseLearningFunction.cs" />
     <Compile Include="Semantics\SemanticNeuron.cs" />
-    <Compile Include="Semantics\SemanticNeuronFactory.cs" />
+    <Compile Include="Semantics\SemanticNeuronCreator.cs" />
     <Compile Include="Simple\SimpleNeuron.cs" />
-    <Compile Include="Simple\SimpleNeuronFactory.cs" />
+    <Compile Include="Simple\SimpleNeuronCreator.cs" />
     <Compile Include="ClusterizationResult.cs" />
     <Compile Include="KohonenMap.cs" />
-    <Compile Include="Learnings\LearningFunction.cs" />
+    <Compile Include="Learnings\ILearningFunction.cs" />
     <Compile Include="Learnings\LinearLearningFunction.cs" />
     <Compile Include="MapIsLearnedException.cs" />
     <Compile Include="Neighborhoods\GaussianNeighborhoodFunction.cs" />

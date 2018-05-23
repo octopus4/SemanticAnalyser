@@ -7,6 +7,8 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.DataVisualization.Charting;
+using System.Windows.Input;
+using System.Windows.Media;
 using Microsoft.Win32;
 using DataProcessing.Data;
 using DataProcessing.Data.Semantic;
@@ -17,21 +19,14 @@ using SOM.Semantics;
 using Visualisation;
 using Visualisation.WPF;
 using Visualisation.Graph;
-using System.Windows.Media.Imaging;
-using System.Windows.Media;
-using System.Windows.Input;
 
 namespace WpfView
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IView
     {
-        /// <summary>
-        /// Visual map image size (width or height)
-        /// </summary>
-        private static readonly int MapImageSize = 600;
         /// <summary>
         /// Maximal width of a context in percents from a dictionary
         /// </summary>
@@ -42,9 +37,17 @@ namespace WpfView
         private static readonly int MaxContextDepth = 3;
 
         /// <summary>
+        /// Message shown if a user tries to learn a map without parsing a text to the datasource
+        /// </summary>
+        private static readonly string SourceIsNullExceptionMessage = "Источника данных не существует";
+        /// <summary>
         /// Message shown if a user tries to get cluster results while the learning process is not ended yet
         /// </summary>
         private static readonly string ResultsExceptionMessage = "Текущий процесс обучения ещё не закончен!";
+        /// <summary>
+        /// Message shown if a user tries to get cluster results without creating and learning a map
+        /// </summary>
+        private static readonly string MapIsNullExceptionMessage = "Карта не была обучена";
 
         /// <summary>
         /// Title of the chart's X axis
@@ -97,11 +100,11 @@ namespace WpfView
         /// <summary>
         /// Factory, that creates neurons
         /// </summary>
-        private INeuronFactory NeuronFactory { get; set; }
+        private INeuronCreator NeuronFactory { get; set; }
         /// <summary>
         /// Factory, that creates distance functions
         /// </summary>
-        private IDistanceFunctionFactory DistanceFactory { get; set; }
+        private IDistanceFunctionCreator DistanceFactory { get; set; }
         /// <summary>
         /// Som Trainer, that trains <see cref="KohonenMap"/> in another thread
         /// </summary>
@@ -115,7 +118,7 @@ namespace WpfView
         /// </summary>
         private ObservableCollection<KeyValuePair<int, double>> Data { get; set; }
 
-        private VisualGraph Graph { get; set; }
+        private GraphPresenter GraphPresenter { get; set; }
 
         public MainWindow()
         {
@@ -129,8 +132,8 @@ namespace WpfView
 
         private void SetupMapParams()
         {
-            NeuronFactory = new SemanticNeuronFactory();
-            DistanceFactory = new SemanticDistanceFunctionFactory();
+            NeuronFactory = new SemanticNeuronCreator();
+            DistanceFactory = new SemanticDistanceFunctionCreator();
         }
 
         private void SetupTrainer()
@@ -187,6 +190,11 @@ namespace WpfView
 
         private void ButtonCreateLearnClick(object sender, RoutedEventArgs e)
         {
+            if (CheckError(string.IsNullOrEmpty(textBoxSource.Text), SourceIsNullExceptionMessage))
+            {
+                return;
+            }
+
             int? width = ValidateTextBox(textBoxWidth, WidthValidationMessage);
             int? height = ValidateTextBox(textBoxHeight, HeightValidationMessage);
             int? epochsCount = ValidateTextBox(textBoxEpochs, EpochValidationMessage);
@@ -213,12 +221,9 @@ namespace WpfView
 
         private int? ValidateTextBox(TextBox textBox, string message, int lower = 0, int? upper = null)
         {
-            if (int.TryParse(textBox.Text, out int result) && result > lower)
+            if (int.TryParse(textBox.Text, out int result) && result > lower && (!upper.HasValue || result <= upper.Value))
             {
-                if (!upper.HasValue || result <= upper.Value)
-                {
-                    return result;
-                }
+                return result;
             }
 
             MessageBox.Show(message);
@@ -227,22 +232,27 @@ namespace WpfView
 
         private void ButtonGetClusterResultClick(object sender, RoutedEventArgs e)
         {
-            if (!Trainer.IsLearningStopped)
+            if (CheckError(Map == null, MapIsNullExceptionMessage))
             {
-                MessageBox.Show(ResultsExceptionMessage);
+                return;
+            }
+            if (CheckError(!Trainer.IsLearningStopped, ResultsExceptionMessage))
+            {
                 return;
             }
 
-            CanvasCreator creator = new WPFCanvasCreator();
-            VisualMap visualMap = new VisualMap(MapImageSize, MapImageSize, Source, creator, Headers);
-
-            visualMap.Init(Map.Result.NeuronsToTokensMap);
-
             CreateGraph();
-            DrawGraph();
-
-            Window clusterResultForm = new ClusterResultWindow(visualMap, Source.FlowTypes);
+            Window clusterResultForm = new ClusterResultWindow(Source, Map.Result, Headers);
             clusterResultForm.ShowDialog();
+        }
+
+        private bool CheckError(bool condition, string message)
+        {
+            if (condition)
+            {
+                MessageBox.Show(message);
+            }
+            return condition;
         }
 
         private void ButtonStopLearningClick(object sender, RoutedEventArgs e)
@@ -255,43 +265,39 @@ namespace WpfView
 
         private void PictureBoxGraphMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (e.Delta > 0)
-            {
-                pictureBoxGraph.Width *= 1.25;
-                pictureBoxGraph.Height *= 1.25;
-            }
-            else
-            {
-                pictureBoxGraph.Width /= 1.25;
-                pictureBoxGraph.Height /= 1.25;
-            }
-            CreateGraph();
-            DrawGraph();
+            Point point = e.GetPosition(pictureBoxGraph);
+            GraphPresenter.MouseWheel(point.X, point.Y, e.Delta);
         }
 
         private void PictureBoxGraphMouseDown(object sender, MouseButtonEventArgs e)
         {
             Point point = e.GetPosition(pictureBoxGraph);
-            Graph.MouseClick((int)(Math.Round(point.X)), (int)(Math.Round(point.Y)));
-            DrawGraph();
+            GraphPresenter.MouseDown(point.X, point.Y);
+        }
+
+        private void PictureBoxGraphMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Point point = e.GetPosition(pictureBoxGraph);
+            GraphPresenter.MouseUp(point.X, point.Y);
+        }
+
+        private void PictureBoxGraphMouseMove(object sender, MouseEventArgs e)
+        {
+            Point point = e.GetPosition(pictureBoxGraph);
+            GraphPresenter.MouseMove(point.X, point.Y);
         }
 
         private void CreateGraph()
         {
-            CanvasCreator creator = new WPFCanvasCreator();
+            CanvasCreator creator = new WpfCanvasCreator();
 
-#warning optimize memory
-            Graph = new VisualGraph((int)pictureBoxGraph.Width, (int)pictureBoxGraph.Height, Source, creator);
-            Graph.Init(Map.Result.NeuronsToTokensMap);
+            GraphPresenter = new GraphPresenter((int)pictureBoxGraph.Width, (int)pictureBoxGraph.Height, Source, creator, this);
+            GraphPresenter.Init(Map.Result.NeuronsToTokensMap);
         }
 
-        private void DrawGraph()
+        public void Update(Visualisation.Canvas canvas)
         {
-            WPFCanvas canvas = (WPFCanvas)Graph.Image;
-            RenderTargetBitmap bmp = new RenderTargetBitmap((int)pictureBoxGraph.Width, (int)pictureBoxGraph.Height, 96, 96, PixelFormats.Default);
-
-            bmp.Render(canvas.Visual);
-            pictureBoxGraph.Source = bmp;
+            pictureBoxGraph.Source = (ImageSource)canvas.Render();
             pictureBoxGraph.InvalidateVisual();
         }
     }

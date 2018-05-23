@@ -11,11 +11,11 @@ namespace SOM.Semantics
     {
         private static readonly int StartIndex = 1;
 
-        public SemanticNeuron(DataToken token, int x, int y) : base(token, x, y)
+        public SemanticNeuron(int x, int y) : base(x, y)
         {
         }
 
-        protected override void InitWeights(DataToken token)
+        public override void InitWeights(DataToken token)
         {
             Weights = new object[token.Length];
             Weights[0] = token.Values[0];
@@ -41,7 +41,7 @@ namespace SOM.Semantics
             {
                 if (token.Types[index] != DataType.Semantic)
                 {
-                    throw new ArgumentException();
+                    throw new ArgumentException("Token is of a wrong type", nameof(token));
                 }
 
                 IEnumerable<SemanticPair> tokenPairs = (SemanticPair[])token.Values[index];
@@ -59,9 +59,7 @@ namespace SOM.Semantics
                 {
                     neuronWeights[i].Frequence += diminishingFactor * (tokenWeights[i].Frequence - neuronWeights[i].Frequence);
                 }
-                neuronWeights.Sort(SemanticPair.Comparison);
-                neuronWeights = neuronWeights.Take(SemanticDataToken.ContextSize).ToList();
-                Weights[index] = neuronWeights.ToArray();
+                Weights[index] = neuronWeights.OrderBy(pair => pair).Take(SemanticDataToken.ContextSize).ToArray();
             }
         }
 

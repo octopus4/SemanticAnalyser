@@ -1,8 +1,8 @@
 ﻿namespace SOM.Learnings
 {
-    internal class LinearLearningFunction : LearningFunction
+    internal class LinearLearningFunction : ILearningFunction
     {
-        private static readonly double Multiplier = 0.9;
+        private static readonly double Multiplier = 0.5;
 
         private int EpochCount { get; }
 

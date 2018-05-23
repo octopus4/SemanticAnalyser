@@ -6,7 +6,7 @@ namespace SOM.Topologies
     {
         protected double Norm { get; set; }
 
-        public Topology(Metric metric)
+        protected Topology(Metric metric)
         {
             Norm = (double)metric + 1;
         }

@@ -8,15 +8,14 @@ namespace Visualisation.Drawers.Semantic
     public class SemanticMapDrawer : MapDrawer<SemanticPair[]>
     {
         public SemanticMapDrawer(Dictionary<Neuron, List<DataToken>> clusterResult,
-            int index, int cellWidth, int cellHeight, CanvasCreator canvasCreator)
-            : base(clusterResult, index, cellWidth, cellHeight, canvasCreator)
+            int index, int cellWidth, int cellHeight, CanvasCreator componentCreator)
+            : base(clusterResult, index, cellWidth, cellHeight, componentCreator)
         {
         }
 
-
         internal override Canvas Draw(int clusterWidth, int clusterHeight)
         {
-            Canvas map = CanvasCreator.CreateCanvas(clusterWidth, clusterHeight);
+            Canvas map = ComponentCreator.CreateCanvas(clusterWidth, clusterHeight);
             PaintTool drawer = map.Tool;
 
             drawer.StartRendering();
@@ -25,7 +24,7 @@ namespace Visualisation.Drawers.Semantic
                 int x = (int)(pair.Key.Position.X * CellWidth);
                 int y = (int)(pair.Key.Position.Y * CellHeight);
 
-                drawer.DrawCluster(x, y, CellWidth, CellHeight);
+                drawer.DrawArea(x, y, CellWidth, CellHeight);
                 for (int i = 0; i < CellHeight / (12 * 1.125f) && i < pair.Value.Count; i++)
                 {
                     string word = pair.Value[i].Values[0].ToString();

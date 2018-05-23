@@ -43,23 +43,12 @@ namespace DataProcessing.Data
         }
 
         /// <summary>
-        /// Initializes a new instance of <see cref="DataToken"/>
-        /// </summary>
-        /// <param name="values">Vector of values</param>
-        /// <param name="typeMask">Vector of values types</param>
-        /// <param name="flowMask">Vector of values flows</param>
-        public DataToken(string[] values, DataType[] typeMask, DataFlow[] flowMask)
-        {
-            InitValues(values, typeMask, flowMask);
-        }
-
-        /// <summary>
         /// Initializes vector of values in the data token
         /// </summary>
         /// <param name="values">String representation of vector's values</param>
         /// <param name="typeMask">Types of vector's values</param>
         /// <param name="flowMask">Flows of vector's values</param>
-        protected abstract void InitValues(string[] values, DataType[] typeMask, DataFlow[] flowMask);
+        public abstract void InitValues(string[] values, DataType[] typeMask, DataFlow[] flowMask);
         protected abstract object CalculateValue(DataType dataType, DataFlow dataFlow, string value);
 
         /// <summary>

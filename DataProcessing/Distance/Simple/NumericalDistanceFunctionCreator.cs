@@ -1,8 +1,8 @@
 ﻿namespace DataProcessing.Distance.Simple
 {
-    public class NumericalDistanceFunctionFactory : IDistanceFunctionFactory
+    public class NumericalDistanceFunctionCreator : IDistanceFunctionCreator
     {
-        public DistanceFunction Produce(Metric metric)
+        public DistanceFunction Create(Metric metric)
         {
             return new NumericalDistanceFunction(metric);
         }

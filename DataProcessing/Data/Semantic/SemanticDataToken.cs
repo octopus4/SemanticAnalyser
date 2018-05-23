@@ -22,8 +22,8 @@ namespace DataProcessing.Data.Semantic
         /// </summary>
         public static int ContextSize { get; set; }
 
-        public SemanticDataToken(string[] values, DataType[] typeMask, DataFlow[] flowMask)
-            : base(values, typeMask, flowMask)
+        public SemanticDataToken()
+            : base()
         {
         }
 
@@ -44,7 +44,7 @@ namespace DataProcessing.Data.Semantic
         /// <param name="values"></param>
         /// <param name="typeMask"></param>
         /// <param name="flowMask"></param>
-        protected override void InitValues(string[] values, DataType[] typeMask, DataFlow[] flowMask)
+        public override void InitValues(string[] values, DataType[] typeMask, DataFlow[] flowMask)
         {
             List<object> convertedValues = new List<object>() { values[0] };
             int[] distantSeparatorIndexes = GetDistantSeparatorIndexes(values);
@@ -52,8 +52,10 @@ namespace DataProcessing.Data.Semantic
             int distance = 1;
             foreach (int index in distantSeparatorIndexes)
             {
+#pragma warning disable CS1030 // #warning: "parameter of distance?'
 #warning parameter of distance?
                 string[] context = FromRange(values, previousIndex, index);
+#pragma warning restore CS1030 // #warning: "parameter of distance?'
                 int separatorIndex = Array.IndexOf(context, ContextSeparator);
 
                 string[] rightValues = FromRange(context, 0, separatorIndex);

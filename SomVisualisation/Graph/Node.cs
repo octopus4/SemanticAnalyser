@@ -7,13 +7,15 @@ namespace Visualisation.Graph
         private static readonly double Diminisher = 2;
         public static readonly double Radius = 6;
 
-        private double Scaler { get; set; }
+        private double Prescaler { get; set; }
 
-        public double X { get; private set; }
-        public double Y { get; private set; }
+        public double X { get; set; }
+        public double Y { get; set; }
+
+        public double RelativeX { get; private set; }
+        public double RelativeY { get; private set; }
 
         public string Word { get; }
-#warning switch list to array
         public List<Node> ConnectedTo { get; private set; }
         public ColorAdapter Color { get; set; }
 
@@ -22,7 +24,7 @@ namespace Visualisation.Graph
             X = x;
             Y = y;
             Word = word;
-            Scaler = 0.25;
+            Prescaler = 2;
             ConnectedTo = new List<Node>();
         }
 
@@ -31,15 +33,20 @@ namespace Visualisation.Graph
             if (!ConnectedTo.Contains(neighbor))
             {
                 ConnectedTo.Add(neighbor);
-                MoveToward(neighbor);
-                Scaler /= Diminisher;
             }
         }
 
         public void MoveToward(Node neighbor)
         {
-            X += -(X - neighbor.X) * Scaler;
-            Y += -(Y - neighbor.Y) * Scaler;
+            X += -(X - neighbor.X) / Prescaler;
+            Y += -(Y - neighbor.Y) / Prescaler;
+            Prescaler *= Diminisher;
+        }
+
+        public void ToRelative(Rectangle captureArea)
+        {
+            RelativeX = X - captureArea.X;
+            RelativeY = Y - captureArea.Y;
         }
     }
 }

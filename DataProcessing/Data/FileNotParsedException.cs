@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace DataProcessing.Data
 {
     [Serializable]
-    internal class FileNotParsedException : Exception
+    public class FileNotParsedException : Exception
     {
         public FileNotParsedException()
         {

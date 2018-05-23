@@ -119,7 +119,7 @@ namespace DataProcessing.Data.Semantic
         {
             if (key < 1 || key > MaxDistance)
             {
-                throw new ArgumentOutOfRangeException("Map does not contain this key");
+                throw new ArgumentOutOfRangeException(nameof(key), "Map does not contain this key");
             }
 
             if (rowIndex.HasValue == colIndex.HasValue)

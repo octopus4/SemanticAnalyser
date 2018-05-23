@@ -10,10 +10,10 @@ namespace DataProcessing.Data.Simple
         /// <summary>
         /// Separator symbol, that is used in the <see cref="Parse(string[], char?)"/> method
         /// </summary>
-        protected static char Separator = '\t';
+        private static char Separator = '\t';
 
         public SimpleDataSource(string[] source, DataType[] typeMask, DataFlow[] flowMask, char? separator = null)
-            : base(Parse(source, separator), typeMask, flowMask, new SimpleDataTokenFactory(), separator)
+            : base(Parse(source, separator), typeMask, flowMask, new SimpleTokenCreator(), separator)
         {
         }
 

@@ -1,8 +1,5 @@
-﻿using DataProcessing.Data;
-
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
+﻿using System.Collections.Generic;
+using DataProcessing.Data;
 
 namespace SOM
 {

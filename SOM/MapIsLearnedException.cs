@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace SOM
 {
     [Serializable]
-    internal class MapIsLearnedException : Exception
+    public class MapIsLearnedException : Exception
     {
         private int Epoch { get; }
         private int EpochCount { get; }
@@ -29,6 +29,11 @@ namespace SOM
 
         protected MapIsLearnedException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
         }
     }
 }
