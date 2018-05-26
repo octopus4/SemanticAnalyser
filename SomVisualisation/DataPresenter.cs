@@ -6,18 +6,20 @@ namespace Visualisation
 {
     public abstract class DataPresenter
     {
-        protected bool IsDragging { get; set; }
-        protected double Scale { get; set; }
-        protected double X { get; set; }
-        protected double Y { get; set; }
-        protected Rectangle CaptureArea { get; set; }
-        protected IView View { get; private set; }
-        protected CanvasCreator ComponentCreator { get; set; }
+        private double SpeedModifier { get; }
 
         protected DataSource Source { get; }
+
+        protected double X { get; private set; }
+        protected double Y { get; private set; }
+        protected IView View { get; private set; }
+        protected bool IsDragging { get; private set; }
+        protected CanvasCreator ComponentCreator { get; private set; }
+
+        protected double Scale { get; set; }
+        protected Rectangle CaptureArea { get; set; }
         protected List<DataToken> SourceTokens { get; set; }
         protected Dictionary<Neuron, List<DataToken>> ClusterResults { get; set; }
-
 
         public Canvas Image { get; protected set; }
         public int Width { get; }
@@ -25,8 +27,10 @@ namespace Visualisation
 
         protected DataPresenter(int width, int height, DataSource source, CanvasCreator componentCreator, IView view)
         {
+            Scale = 1;
             Width = width;
             Height = height;
+            SpeedModifier = (Width * Height) / 160000.0;
             Source = source;
             ComponentCreator = componentCreator;
             SourceTokens = new List<DataToken>(Source);
@@ -86,8 +90,8 @@ namespace Visualisation
             {
                 double dx = X - x;
                 double dy = Y - y;
-                CaptureArea.X += dx;
-                CaptureArea.Y += dy;
+                CaptureArea.X += dx * SpeedModifier;
+                CaptureArea.Y += dy * SpeedModifier;
                 Invalidate();
             }
             X = x;
