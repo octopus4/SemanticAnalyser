@@ -42,6 +42,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImageObject.cs" />
     <Compile Include="IView.cs" />
     <Compile Include="Rectangle.cs" />
     <Compile Include="ColorAdapter.cs" />
@@ -50,10 +51,11 @@
     <Compile Include="Canvas.cs" />
     <Compile Include="CanvasCreator.cs" />
     <Compile Include="Colorizer.cs" />
-    <Compile Include="Drawers\Categorial\CategorialMapDrawer.cs" />
-    <Compile Include="Drawers\MapDrawer.cs" />
-    <Compile Include="Drawers\Numerical\NumericalMapDrawer.cs" />
-    <Compile Include="Drawers\Semantic\SemanticMapDrawer.cs" />
+    <Compile Include="SOM\Cluster.cs" />
+    <Compile Include="SOM\Drawers\Categorial\CategorialMapDrawer.cs" />
+    <Compile Include="SOM\Drawers\MapDrawer.cs" />
+    <Compile Include="SOM\Drawers\Numerical\NumericalMapDrawer.cs" />
+    <Compile Include="SOM\Drawers\Semantic\SemanticMapDrawer.cs" />
     <Compile Include="PaintTool.cs" />
     <Compile Include="DataPresenter.cs" />
     <Compile Include="Graph\GraphPresenter.cs" />
