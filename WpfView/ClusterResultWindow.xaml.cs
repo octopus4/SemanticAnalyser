@@ -7,6 +7,7 @@ using Microsoft.Win32;
 using DataPreprocessing.Data;
 using SOM;
 using Visualisation;
+using Visualisation.SOM;
 using Visualisation.WPF;
 
 namespace WpfView
@@ -36,11 +37,11 @@ namespace WpfView
 
         private void PictureBoxClustersMouseClick(object sender, MouseEventArgs e)
         {
-            Point position = e.GetPosition(this);
-            int x = (int)(position.X * Map.Width * 1.0 / pictureBoxClusters.Width);
-            int y = (int)(position.Y * Map.Height * 1.0 / pictureBoxClusters.Height);
+            //Point position = e.GetPosition(this);
+            //int x = (int)(position.X * Map.Width * 1.0 / pictureBoxClusters.Width);
+            //int y = (int)(position.Y * Map.Height * 1.0 / pictureBoxClusters.Height);
 
-            Map.MouseDown(x, y);
+            //Map.MouseDown(x, y);
         }
 
         private void SaveAsExecuted(object sender, ExecutedRoutedEventArgs e)
@@ -62,6 +63,30 @@ namespace WpfView
         {
             pictureBoxClusters.Source = (ImageSource)canvas.Render();
             pictureBoxClusters.InvalidateVisual();
+        }
+
+        private void PictureBoxClustersMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            Point position = e.GetPosition(pictureBoxClusters);
+            Map.MouseWheel(position.X, position.Y, e.Delta);
+        }
+
+        private void PictureBoxClustersMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Point position = e.GetPosition(pictureBoxClusters);
+            Map.MouseUp(position.X, position.Y);
+        }
+
+        private void PictureBoxClustersMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Point position = e.GetPosition(pictureBoxClusters);
+            Map.MouseDown(position.X, position.Y);
+        }
+
+        private void PictureBoxClustersMouseMove(object sender, MouseEventArgs e)
+        {
+            Point position = e.GetPosition(pictureBoxClusters);
+            Map.MouseMove(position.X, position.Y);
         }
     }
 }

@@ -13,12 +13,12 @@
         <KeyBinding Key="S" Modifiers="Ctrl" Command="Save"></KeyBinding>
     </Window.InputBindings>
     <Grid>
+        <Image Name="pictureBoxClusters" HorizontalAlignment="Left" Height="632" Margin="10,32,0,0" VerticalAlignment="Top" Width="672" Stretch="Fill" MouseWheel="PictureBoxClustersMouseWheel" MouseUp="PictureBoxClustersMouseUp" MouseDown="PictureBoxClustersMouseDown" MouseMove="PictureBoxClustersMouseMove"/>
         <Menu Height="22" Margin="10,5,0,642" >
             <MenuItem Height="22" Width="84" BorderBrush="Black" Name="menuItemSaveImage" Header="Файл">
                 <MenuItem Header="Сохранить файл" Command="Save"></MenuItem>
                 <MenuItem Header="Закрыть" Command="Close"></MenuItem>
             </MenuItem>
         </Menu>
-        <Image Name="pictureBoxClusters" HorizontalAlignment="Left" Height="632" Margin="10,27,0,0" VerticalAlignment="Top" Width="672" Stretch="Fill"/>
     </Grid>
 </Window>
